@@ -1,14 +1,16 @@
 class Api::V1::PlantcardsController < ApplicationController
 
     def index
-        plantcard = Plantcard.select {|s| s.user_id == current_user.id}
-       render json: plantcard, only: [:id, :commonname, :scientificname, :description]
+        # byebug
+        plantcards = current_user.plantcards
+       render json: plantcards, only: [:id, :commonname, :scientificname, :img_url]
 
     end
+
    def show
        plantcard = Plantcard.find_by(id: params[:id])
        if plantcard
-           render json: plantcard.slice(:id, :commonname, :scientificname, :description)
+           render json: plantcard.slice(:id, :commonname, :scientificname, :img_url)
        else 
            render json: {message: "Plant Card Not Found!"}
        end
@@ -19,7 +21,10 @@ class Api::V1::PlantcardsController < ApplicationController
     end
 
    def create
-        plantcard = Plantcard.create(plantcard_params)
+    # byebug
+   
+       plantcard = Plantcard.create(plantcard_params)
+        plantcollection = Plantcollection.create({user_id: current_user.id, plantcard_id: plantcard.id})
         render json: {message: "success"}
     end
     
@@ -30,9 +35,9 @@ class Api::V1::PlantcardsController < ApplicationController
     end
 
 private
-def plantcard_params
-    params.require(:plantcard).permit(:commonname, :scientificname, :description)
-end
+    def plantcard_params
+        params.require(:plantcard).permit(:commonname, :scientificname, :img_url)
+    end
 
 
 end

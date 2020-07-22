@@ -1,3 +1,3 @@
 class PlantcardSerializer < ActiveModel::Serializer
-  attributes :id, :commonname, :scientificname, :description
+  attributes :id, :commonname, :scientificname, :img_url
 end
