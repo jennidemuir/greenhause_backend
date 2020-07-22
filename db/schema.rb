@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2020_07_16_170533) do
   create_table "plantcards", force: :cascade do |t|
     t.string "commonname"
     t.string "scientificname"
-    t.string "description"
+    t.string "img_url"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
