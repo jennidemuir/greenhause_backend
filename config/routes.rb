@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       post '/auth', to: 'auth#create'
       get '/current_user', to: 'auth#show'
       get '/profile', to: 'users#profile'
-      post '/profile', to: 'users#update'
+      patch '/profile', to: 'users#update'
     end
   end
 end

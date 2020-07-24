@@ -2,7 +2,7 @@ class Api::V1::PlantcardsController < ApplicationController
 
     def index
         # byebug
-        plantcards = current_user.plantcards
+       plantcards = current_user.plantcards
        render json: plantcards, only: [:id, :commonname, :scientificname, :img_url]
 
     end

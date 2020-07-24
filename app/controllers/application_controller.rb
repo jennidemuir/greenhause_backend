@@ -1,5 +1,7 @@
 class ApplicationController < ActionController::API
-    before_action :authorized
+  before_action :authorized
+  include ActiveStorageSupport::SupportForBase64
+    
    
     def encode_token(payload)
      
