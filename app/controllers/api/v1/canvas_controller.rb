@@ -1,13 +1,18 @@
 class Api::V1::CanvasController < ApplicationController
+    
+
         def index
-             canvas = Canva.select {|s| s.user_id == current_user.id}
-            render json: canvas, only: [:id, :data_url, :user_id, :canvas_notes]
+         
+            canvas = current_user.canvas
+         
+            #  canvas = Canva.select {|s| s.user_id == current_user.id}
+            render json: canvas, only: [:id, :image, :canvas_notes]
      
          end
         def show
             canvas = Canva.find_by(id: params[:id])
             if canvas
-                render json: canvas.slice(:id, :data_url, :user_id, :canvas_notes)
+                render json: canvas.slice(:id, :image, :user_id, :canvas_notes)
             else 
                 render json: {message: "Artwork Not Found!"}
             end
@@ -18,9 +23,30 @@ class Api::V1::CanvasController < ApplicationController
          end
 
         def create
-             canvas = Canva.create(Canvas_params)
-             render json: {message: "success"}
+    
+            canvas = Canva.new(user_id: current_user.id, image: params[:canvas][:image])
+         
+            if canvas.save
+              blob = ActiveStorage::Blob.find_by(key: [params[:image]])
+                    if blob
+                        canvas.image.attach(blob)
+                    end
+              render json: {msg: 'Successfully Create', id: canvas.id}, status: 200
+            else
+              render json: {msg: 'Could not create', error: canvas.errors.messages}, status: 409
+            end
          end
+
+         def edit 
+            @canvas = Canva.find(params[:id])
+          end
+      
+          def update
+            @canvas = Canva.find(params[:id])
+            # byebug
+            @canvas = Canva.update(canvas_params)
+            render json: @canvas.to_json
+          end
          
          def destroy
              canvas = Canva.find_by(id: params[:id])
@@ -29,41 +55,9 @@ class Api::V1::CanvasController < ApplicationController
          end
 
     private
-     def Canvas_params
-         params.require(:canvas).permit(:data_url, :user_id, :canvas_notes)
+     def canvas_params
+         params.require(:canvas).permit(:image, :canvas_notes)
      end
 
 end
 
-# class canvassController < ApplicationController
-#     def index
-       
-#         sketchbooks = Sketchbook.select {|s| s.user_id == current_user.id}
-#         render json: sketchbooks, only: [:id, :data_url, :user_id, :gallery_id]
-     
-#     end
-#     def show
-#         sketchbook = Sketchbook.find_by(id: params[:id])
-#         if sketchbook
-#             render json: sketchbook.slice(:id, :data_url, :user_id, :gallery_id)
-#         else 
-#             render json: {message: "Artwork Not Found!"}
-#         end
-#     end
-#     def new
-#         sketchbook = Sketchbook.new
-#     end
-#     def create
-#         sketchbook = Sketchbook.create(sketchbook_params)
-#         render json: {message: "success"}
-#     end
-#     def destroy
-#         sketchbook = Sketchbook.find_by(id: params[:id])
-#         sketchbook.destroy()
-#         render json: {message: "Artwork Has Been Deleted!"}
-#     end
-#     private
-#     def sketchbook_params
-#         params.require(:sketchbook).permit(:data_url, :user_id, :gallery_id)
-#     end
-# end
