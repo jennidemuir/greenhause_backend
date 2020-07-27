@@ -44,7 +44,7 @@ class Api::V1::CanvasController < ApplicationController
           def update
             @canvas = Canva.find(params[:id])
             # byebug
-            @canvas = Canva.update(canvas_params)
+            @canvas.update(canvas_params)
             render json: @canvas.to_json
           end
          
