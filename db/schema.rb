@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 2020_07_23_195016) do
   create_table "plantcollections", force: :cascade do |t|
     t.integer "user_id", null: false
     t.integer "plantcard_id", null: false
+    t.string "plantnote"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["plantcard_id"], name: "index_plantcollections_on_plantcard_id"

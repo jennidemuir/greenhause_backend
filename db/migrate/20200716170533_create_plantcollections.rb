@@ -3,7 +3,7 @@ class CreatePlantcollections < ActiveRecord::Migration[6.0]
     create_table :plantcollections do |t|
       t.belongs_to :user, null: false, foreign_key: true
       t.belongs_to :plantcard, null: false, foreign_key: true
-
+      t.string :plantnote
       t.timestamps
     end
   end
